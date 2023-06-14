@@ -1,6 +1,6 @@
 ![](/images/ahlsbanner.png)
 
-# A-HLS Epic Patient Search Documentation 
+# A-HLS Epic Patient Search WITH CREATE Documentation 
 
 ## **Overview**
 
