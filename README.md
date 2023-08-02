@@ -14,7 +14,7 @@ It is assumed that an organization has enabled their Patient.Create (R4) and Pat
 
 ![](/images/psimage1.png)
 ![](/images/psimage2.png)
-![](/images/psimage3.png)
+![](/images/psimage8.png)
 
 ## **Business Objective**
 
