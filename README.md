@@ -14,6 +14,7 @@ It is assumed that an organization has enabled their Patient.Create (R4) and Pat
 
 ![](/images/psimage1.png)
 ![](/images/psimage2.png)
+![](/images/psimage3.png)
 
 ## **Business Objective**
 
@@ -93,7 +94,7 @@ It will also improve a user's experience by providing a single user interface to
 
 ### 1. Pre-Install Configuration Steps:
 
-#### EHR Pre-Instllation Steps:
+#### EHR Pre-Installation Steps:
 
 * Confirm that your endpoint is configured such that the following Search and Create APIs are active - for full reference, please refer to the [fhir.epic.com](http://fhir.epic.com/) API documentation.
         1. api/FHIR/R4/Patient
