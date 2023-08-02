@@ -1,16 +1,16 @@
 ![](/images/ahlsbanner.png)
 
-# A-HLS Epic Patient Search WITH CREATE Documentation 
+# A-HLS Epic Patient Search & Create Documentation 
 
 ## **Overview**
 
-The Epic Patient Search accelerator enables customers to search for a patient in their Epic system from the Salesforce Health Cloud console. A user would enter the patient’s information to view results. The user has a choice of searching by Patient ID (SSN, FHIRID, or MRN), Name and Birthdate, or Name, Legal Sex, and Phone/Email. The user can then open the patient's record in Salesforce to view their detail. 
+The Epic Patient Search and Create accelerator enables customers to search for a patient in their Epic system from the Salesforce Health Cloud console, and if the patient does not yet exist in Epic, create that Epic patient record from Salesforce. A user would enter the patient’s information to view resulting matches. The user has a choice of searching by Patient ID (SSN, FHIRID, or MRN), Name and Birthdate, or Name, Legal Sex, and Phone/Email. The user can then open the patient's record in Salesforce to view their detail. 
 
-The accelerator is compatible with both MuleSoft or via a direct connection via FHIR APIs with Epic. After a few configuration steps, an organization is ready to start using the Patient Search component in their workflows.
+If the patient does not yet exist in Epic then the search results will return no matches and ask the user if they would like to create the patient. The user would then fill out the required fields as outlined in Epic's Patient.Create (R4) public FHIR API. 
 
-The setup instructions below detail how to connect the Accelerator directly to your Epic instance. Please contact your MuleSoft AE for support in connecting the Accelerator to MuleSoft.
+The accelerator is compatible with both MuleSoft, MuleSoft Direct, or via a direct connection via FHIR APIs with Epic. After a few configuration steps, an organization is ready to start using the Patient Search & Create component in their workflows.
 
-It is assumed that an organization has enabled their Patient R4 FHIR API in their Epic system which is what supports the patient search capability.
+It is assumed that an organization has enabled their Patient.Create (R4) and Patient.Search (R4) FHIR API in their Epic system which is what supports the patient search capability.
 
 ![](/images/psimage1.png)
 ![](/images/psimage2.png)
@@ -18,7 +18,7 @@ It is assumed that an organization has enabled their Patient R4 FHIR API in thei
 ## **Business Objective**
 
 This accelerator aims to reduce the cost of IT by providing a free, lightweight, integration point with a customer's Epic instance. 
-It will also improve a user's experience by providing a single user interface to search for, find, and open a patient's record without needing to switch systems.
+It will also improve a user's experience by providing a single user interface to search for, find, create, and open a patient's record without needing to switch systems.
 
 ## **Business Value and Benefits**
 
@@ -48,6 +48,9 @@ It will also improve a user's experience by providing a single user interface to
 * Enter the patient’s information
 * Click Search 
 * Click on the correct patient to open their Salesforce record
+* If no patient result is found, click on Create Patient
+* Enter the patient's information and click Create
+* The patient's Salesforce record will automatically open and be linked with the patient's Epic unique identifier
 
 * * *
 
@@ -62,6 +65,7 @@ It will also improve a user's experience by providing a single user interface to
 * EHR/AuthAndSearch
 * EpicFHIR/PatientSearch
 * Patient/SearchCreate
+* EpicFHIR/PatientCreate
 
 ### DataRaptors (4)
 
@@ -70,7 +74,7 @@ It will also improve a user's experience by providing a single user interface to
 * DRFindPersonAccount
 * DRCreatePersonAccount
 
-### Documents (Logos) (4)
+### Images (Logos) (4) - found in Images folder in this repo
 
 * Epic logo transparent.png
 * nurse.png
@@ -91,14 +95,14 @@ It will also improve a user's experience by providing a single user interface to
 
 #### EHR Pre-Instllation Steps:
 
-* Confirm that your endpoint is configured such that the following APIs are active - for full reference, please refer to the [fhir.epic.com](http://fhir.epic.com/) API documentation.
+* Confirm that your endpoint is configured such that the following Search and Create APIs are active - for full reference, please refer to the [fhir.epic.com](http://fhir.epic.com/) API documentation.
         1. api/FHIR/R4/Patient
 
 
 
 #### **Salesforce Pre-Installation Steps:**
 
-* Ensure your Salesforce Health Cloud org has OmniStudio installed - either the Vlocity HINS package or Core OmniStudio. 
+* Ensure your Salesforce Health Cloud org has Core OmniStudio installed. 
         1. To verify installation, please navigate to Setup > Installed Packages > OmniStudio.
     2. Enable Identity Provider according to these steps: https://help.salesforce.com/s/articleView?id=sf.identity_provider_enable.htm&type=5
 ![](/images/psimage3.png)
@@ -107,8 +111,7 @@ It will also improve a user's experience by providing a single user interface to
 * Follow the download steps in the **"Download Now"** flow presented on the HLS Accelerators website for this Accelerator which downloads the following GitHub repository on your machine: https://hlsaccelerators.developer.salesforce.com/s/bundle/a9E5f000000PLAeEAO/epic-patient-search
 * Unzip the resulting .zip file which is downloaded to your machine. 
 * Open the **“OmniStudio”** folder
-	* If you have the Vlocity_ins package installed in your org, open the folder titled “Vlocity Version”.
-	* If you have Core OmniStudio installed in your org, open the folder titled "OmniStudio Version".
+	* Open the folder titled "OmniStudio Version".
 	* Install the DataPack into your org. 
 		* In Salesforce, click on **App Launcher** → Search for **"OmniStudio DataPacks"** and click on it.
 		* Click on **"Installed"** > Import > From File
@@ -155,7 +158,7 @@ Update the **EpicFHIRPatientSearch** Integration Procedure to use the MuleSoft D
 * App Launcher > Integration Procedures > EpicFHIRPatientSearch
 	* Create a **New Version** of the Integration Procedures
 	* For the **HTTP Action** element, make the following changes:
-		* In the **Path** field, remove the “/FHIR/R4” portion of the path such that the Path = /api/AllergyIntolerance (for example)
+		* In the **Path** field, remove the “/FHIR/R4” portion of the path such that the Path = /api/Patient (for example)
 		* Replace **Epic_Auth_JWT** with the name of the Named Credential resulting from the MuleSoft Direct setup above (e.g. **Health_generic_system_app**)
 	* **Activate** your new Integration Procedure version
 
@@ -271,7 +274,7 @@ After completing your respective integration configuration, please complete the 
     * Open the **EHR/AuthAndSearch** Integration Procedure. 
     * Click **"Activate"** at the bottom of the Procedure Configuration screen if the integration procedure is not already active.
     * Close the Integration Procedure.
-    * Repeat the steps above for the Integration Procedures titled **"EpicFHIR/PatientSearch"** and **"Patient/SearchCreate"**.
+    * Repeat the steps above for the Integration Procedures titled **"EpicFHIR/PatientSearch"**, **"EpicFHIR/PatientCreate"** and **"Patient/SearchCreate"**.
 
 ### 3. Configure OmniScript 
 * Click on **App Launcher** → Search for “OmniScripts”
@@ -279,9 +282,10 @@ After completing your respective integration configuration, please complete the 
         * Deactivate the OmniScript
         * If the images for the 3 search options do not appear, do the following:
 	        * Open up the **Step 1** Element and click on the selection boxes which hold the three search options. 
-	        * On the **Properties** pane, click on the hyperlink name of one of the option titles, and then click the Save button.
+	        * On the **Properties** pane, click on the hyperlink name of one of the option titles, and re-upload the image using the files downloaded in the git repo
+          	* Click the Save button.
         * **Activate** the OmniScript. Be sure to activate the FlexCard in the previous step before re-activating the OmniScript.
-        * If you are using **Core OmniStudio** on Health Cloud, click on the drop-down arrow next to "Active" and select **"Deploy Standard Run Time Compatible LWC"**.
+        * Click on the drop-down arrow next to "Active" and select **"Deploy Standard Run Time Compatible LWC"**.
     * For more information regarding activating Omniscripts, please see this article: https://help.salesforce.com/s/articleView?id=sf.os_activating_omniscripts.htm&type=5
 
 ### 4. Configure DataRaptor
@@ -301,13 +305,15 @@ After completing your respective integration configuration, please complete the 
 
 ## **Assumptions**
 
-1. A customer has licenses for Health Cloud withe OmniStudio, or the HINS Managed Package with OmniStudio. These solutions have all been installed and are functional. 
+1. A customer has licenses for Health Cloud with Core OmniStudio installed. These solutions have all been installed and are functional. 
 2. A customer is assuming Salesforce Lightning Experience — not Classic.
-3. Data Model elements that are part of the HINS (Vlocity) Managed package or Health Cloud with OmniStudio are all available.
+3. Data Model elements that are part of Health Cloud with OmniStudio are all available.
 4. The Accelerator uses the Lightning Design System standards and look. Customers may want to apply their own branding which can be achieved.
 5. A customer has an administrator/developer who is familiar with IDX and OmniStudio.
 6. A customer is live with Epic EHR and has their FHIR R4 server active.
 7. Epic is a trademark of Epic Systems Corporation.
+8. This tool is intended to provide capabilities for Customers to configure and optimize use of their implemented Salesforce Services. Customers should ensure that their use of this tool meets their own use case needs and compliance requirements (including any applicable healthcare and privacy laws, rules, and regulations).
+9. Customers that use software, APIs, or other products from Epic may be subject to additional terms and conditions, including, without limitation, Epic's open.epic API Subscription Agreement terms.
 
 
 
@@ -319,6 +325,7 @@ After completing your respective integration configuration, please complete the 
     * April 7, 2023 - Updated documentation
     * May 4, 2023 - updated with configuration steps for MuleSoft customers
     * May 23, 2023 - updated documentation for easier navigation and MuleSoft Direct instructions
+    * August 2, 2023 - updated with the new Create capabilities
 
 
 
